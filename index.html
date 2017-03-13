@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+     KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+<html>
+    <head>
+        <!--
+        Customize this policy to fit your own app's needs. For more guidance, see:
+            https://github.com/apache/cordova-plugin-whitelist/blob/master/README.md#content-security-policy
+        Some notes:
+            * gap: is required only on iOS (when using UIWebView) and is needed for JS->native communication
+            * https://ssl.gstatic.com is required only on Android and is needed for TalkBack to function properly
+            * Disables use of inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
+                * Enable inline JS: add 'unsafe-inline' to default-src
+        -->
+        <meta charset="utf-8" />
+        <meta name="format-detection" content="telephone=no">
+        <meta name="msapplication-tap-highlight" content="no">
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height" />
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/index.css">
+
+        
+        <title>Rumbafest</title>
+    </head>
+    <body>
+        
+        <screen id="login_screen" style="z-index:25;" class="screen">
+            <div class="container2" style='margin:0!important;'>
+                <div class="container-flex" style="overflow-y:scroll;width:75%;margin:auto 12.5%;">
+                <div class="row">
+                    <div id='login-logo'>
+                    </div>
+                </div>
+                <div class="row">
+                    <button id="fb_login_button" onclick="fb.login();" class="btn btn-lg btn-primary btn-block bg-naranja">Conectar con 
+                        <div id="icono-facebook" style=""></div>
+                        </button>
+                    <form class="form-signin login-form" id="loginForm">
+                        
+                        <div class="input-group" style="margin:10px 0!important;">
+                            <span class="input-group-addon" style="background-color:white;"><i class="fa fa-user" aria-hidden="true"></i></span>
+                            <input style="margin:0!important;padding:0!important;border-left:none;" type="email" id="loginEmail" name="user_email" class="inputpz form-control " placeholder="Correo electr&oacute;nico" required autofocus="">
+                        </div>
+                        <div class="input-group" style="margin:10px 0!important;">
+                            <span class="input-group-addon" style="background-color:white;"><i class="fa fa-key" aria-hidden="true"></i></span>
+                            <input style="margin:0!important;padding:0!important;border-left:none;" type="password" id="loginPassword" name="user_pass" class="inputpz form-control " placeholder="Contrase&ntilde;a" required>
+                        </div>
+                        <button id="loginButton" class="btn btn-lg btn-primary btn-block bg-naranja" type="submit">ENTRAR</button>
+                        
+                    </form>
+						<label class="checkbox-inline" style="float:right;"><input type="checkbox" id="rememberPassword" name="rememberPassword" value="remember">Recordar contrase&ntilde;a</label>
+                    
+                </div>
+                <div class="row">
+                    <button onclick="registerScreen.registerPantalla.show();"class="btn btn-link font-negro" style="font-weight:bold;">Registrarse</button>
+                    <button class="btn btn-link font-negro" style="float:right;text-decoration: underline;">Olvid&eacute; mi contrase&ntilde;a</button>
+                </div>
+                <div class="row">
+                	<div style="margin: 20px auto 0;width:200px;">
+                	<a>Pol&iacute;ticas de Uso y Privacidad</a>
+                	</div>
+                </div>
+            </div>
+            </div>
+            
+        </screen>
+        <screen id="register_screen" style="display:none;z-index:26;" class="screen">
+            <div class="screen-header">
+                
+                <div class='text-header'>CREAR CUENTA</div>
+                <button onclick="registerScreen.registerPantalla.hide();" class='cerrar'>X</button>
+                   
+            </div>
+            <div class="container">
+                <div class="container-flex">
+                <div class="row" style="margin-top:20px;">
+                    <p style="text-align:center;">Ingresa tu informaci&oacute;n para crear tu cuenta</p>
+                </div>
+                <form class="form-register" id="registerForm">
+                        <!--  
+                        <select name="user_pais" class="form-control " id="user_pais" required>
+                            <option disabled selected hidden>Pa&iacute;s</option>
+                            <option>Honduras</option>
+                            <option>Rep&uacute;blica Dominicana</option>
+                            
+                        </select>-->
+                        <select name="user_genero" class="inputpz form-control " id="user_genero" required>
+                            <option disabled selected hidden>G&eacute;nero</option>
+                            <option>Femenino</option>
+                            <option>Masculino</option>
+                        </select>
+                        <select name="user_edad" class="inputpz form-control " id="user_edad" required>
+                            <option disabled selected hidden>Escoge tu rango de edad</option>
+                            <option>18-24 a&ntilde;os</option>
+                            <option>25-34 a&ntilde;os</option>
+                            <option>35-44 a&ntilde;os</option>
+                            <option>44+ a&ntilde;os</option>
+                        </select>
+                        <input type="email" id="registerEmail" name="user_email" class="inputpz form-control " placeholder="Correo electr&oacute;nico" required>
+                        
+                        <input type="password" id="registerPass1" name="user_pass1" class="inputpz form-control " placeholder="Contrase&ntilde;a" required>
+                        <input type="password" id="registerPass2" name="user_pass2" class="inputpz form-control " placeholder="Confirma tu contrase&ntilde;a" required>
+                        <input type="text" id="registerName" name="user_name" class="inputpz form-control " placeholder="Nombre p&uacute;blico" required>
+                        <!--<input type="text" id="registerBirthdate" name="user_birthdate" class="form-control " placeholder="Fecha de nacimiento" onfocus="(this.type='date')" required>-->
+                        <button id="registerButton" class="btn btn-lg btn-primary btn-block bg-naranja" type="submit">ENTRAR</button>
+                        
+                    </form>
+                
+                
+                 </div>
+            </div>
+            
+        </screen>
+
+        <screen id="tooltips" style="display:none" class="screen">
+            <subscreen id="tooltips_swipe" style="display:flex">
+                <div style="width:100%;position:relative;height:50px;margin:auto 0;">
+                    <div id="swipe_left" style="display:inline-block;position:absolute;background-image:url(../www/img/icono-no-interesa.png);background-size:contain;background-repeat:no-repeat;height:150px;width:150px;top:0;left:20px">
+                    </div>
+                    <div id="swipe_right" style="display:inline-block;position:absolute;background-image:url(../www/img/icono-me-interesa.png);background-size:contain;background-repeat:no-repeat;height:150px;width:150px;top:0;right:0;">
+                    </div>
+                </div>
+            </subscreen>
+        </screen>
+        <screen class="screen" id="menu_principal" style="z-index:21;background-color:transparent;display:none;">
+            <div style="height:100%;width:80%;display:inline-block;float:left;background-color:white;overflow-y:scroll;">
+                <ul>
+                    <li style="text-align:center;text-indent:0!important;">MEN&Uacute;
+                        <ul>
+                            <li>Inicio</li>
+                            <li>Convertir a premier</li>
+                        </ul>
+                    </li>
+                    <li>Cuenta
+                        <ul>
+                            <li onclick="user.logout();">Cerrar sesi&oacute;n</li>
+                            <li>Editar mis preferencias de perfil</li>
+                        </ul>
+                    </li>
+                    <li>Social
+                        <ul>
+                            <li>Invitar amigos</li>
+                            <li>Buscar amigos en Rumbafest</li>
+                        </ul>
+                    </li>
+                    <li>Soporte
+                        <ul>
+                            <li>Ayuda</li>
+                            <li>Reglamento</li>
+                            <li>Pol&iacute;ticas de uso y privacidad</li>
+                            <li>Activar tooltips</li>
+                            <li>Activar tutorial</li>
+                            <li>Sobre nosotros</li>
+                            <li>Preguntas frecuentes</li>
+                            <li>Enviar sugerencias</li>
+                        </ul>
+                    </li>
+
+                </ul>
+            </div>
+            <div onclick="menuScreen.menu.hide();" id="close_menu" style="height:100%;width:20%;display:inline-block;float:left;background-color:transparent;">
+            </div>
+        </screen>
+        <screen class="screen" id='proponer_lugar_screen' style="display:none;z-index:21">
+                <div class="screen-header">
+                    
+                    <button class='home'></button>
+                    <div class='text-header' style="width:220px;">PROPONER LUGAR</div>
+                    <button class='cerrar' onclick="proponerLugarScreen.pantalla.hide();">X</button>
+                </div>
+                <div class="container">
+                    <div class="container-flex" style="overflow:scroll;">
+                        
+                            <form id="proponer_lugar_form" style="margin-top:20px;">
+                            	<div style="overflow:hidden;">
+	                                <div class="proponer_lugar_logo" id="proponer_lugar_logo">
+	                                </div>
+	                                <div class="col-xs-6" style="margin-left:20px;">
+	                                    <select  name="tipo_lugar_propuesta" class="inputpz form-control " id="tipo_evento_propuesta" required>
+	                                        <option disabled selected hidden>Tipo de lugar</option>
+	                                        <option value="bar">Bar</option>
+	                                        <option value="discoteca">Discoteca</option>
+	                                        <option value="lounge">Lounge</option>
+	                                        <option value="restaurante">Restaurante</option>
+	                                    </select>
+	                                </div>
+                                </div>
+                                <div>
+	                                <input type="text" id="name_lugar_propuesta" name="name_lugar" class="inputpz form-control " placeholder="Nombre del lugar" required autofocus="">
+	                                
+	                                <input type="text" id="direccion_lugar_propuesta" name="direccion_lugar" class="inputpz form-control " placeholder="Direcci&oacute;n" required>
+	                                
+	                                    <input type="text" id="cover_lugar_propuesta" name="cover_lugar_propuesta" class="inputpz form-control " placeholder="Cover" required autofocus="">
+	                                
+	                                
+                                </div>
+                                <div style="color:grey;"> 
+	                                	D&iacute;as de atenci&oacute;n y horario
+	                                	<span><button id="agregar_horario"><i class="fa fa-plus-circle" aria-hidden="true"></i></button></span>
+	                                </div>
+                                <div class="dias-horario-propuesta">
+	                                <div >
+	                                	<select style="margin:0!important;padding:0!important;" name="dias_atencion_lugar_propuesta1" class="inputpz form-control" required multiple>
+		                                	<option value="Lunes">Lunes</option>
+		                                	<option value="Martes">Martes</option>
+		                                	<option value="Mi&eacute;rcoles">Mi&eacute;rcoles</option>
+		                                	<option value="Jueves">Jueves</option>
+		                                	<option value="Viernes">Viernes</option>
+		                                	<option value="S&aacute;bado">S&aacute;bado</option>
+		                                	<option value="Domingo">Domingo</option>
+		                                </select>
+	                                </div>
+	                                <div style="overflow:hidden;">
+		                                <div class="col-xs-6" style="padding: 0 5px 0 0!important;">
+		                                    <input onfocus="(this.type='time')" type="text"  name="tiempo_inicio_lugar_propuesta1" class="inputpz form-control " placeholder="Hora que abre"  required>
+		                                </div>
+		                                <div class="col-xs-6" style="padding:0 0 0 5px!important;">
+		                                    <input onfocus="(this.type='time')" type="text"  name="tiempo_fin_lugar_propuesta1" class="inputpz form-control " placeholder="Hora que cierra"  required>
+		                                </div>
+	                                </div>
+                                </div>
+                                
+                                
+                                <button id="proponerLugarButton" class="btn btn-lg btn-primary btn-block bg-naranja" type="submit">PROPONER LUGAR</button>
+                            </form>
+                        
+                    </div>
+                </div>
+            </screen>
+        <screen class="screen" id='proponer_evento_screen' style="display:none;z-index:21">
+                <div class="screen-header">
+                    
+                    <button class='home'></button>
+                    <div class='text-header' style="width:220px;">PROPONER EVENTO</div>
+                    <button class='cerrar' onclick="proponerEventoScreen.pantalla.hide();">X</button>
+                </div>
+                <div class="container">
+                    <div class="container-flex">
+                        
+                            <form id="proponer_evento_form">
+                                <select name="tipo_evento_propuesta" class="inputpz form-control " id="tipo_evento_propuesta" required>
+                                    <option disabled selected hidden>Tipo de evento</option>
+                                    <option value="festival">Festival</option>
+                                    <option value="musica">M&uacute;sica en vivo</option>
+                                    <option value="concierto">Concierto</option>
+                                    <option value="fiesta">Fiesta</option>
+                                </select>
+                                
+                                <input type="text" id="name_evento_propuesta" name="name_evento_propuesta" class="inputpz form-control " placeholder="Nombre del evento" required autofocus="">
+                                <textarea rows="4" placeholder="Descripci&oacute;n" name="descripcion_evento_propuesta" required class="inputpz  form-control"></textarea>
+                                <input type="text" id="direccion_evento_propuesta" name="direccion_evento_propuesta" class="inputpz form-control " placeholder="Direcci&oacute;n" required>
+                               <!--   <div style="color:grey;"> Fecha y hora</div> -->
+                                <div class="col-xs-12" style="padding:0!important;">
+                                    <input onfocus="(this.type='date')" type="text" id="evento_fecha" name="fecha_evento_propuesta" class="inputpz form-control " placeholder="Fecha de evento"  required>
+                               		
+                                </div>
+                                <div class="col-xs-6" style="padding:0 5px 0 0!important;">
+                                    <input onfocus="(this.type='time')" type="text" id="tiempo_inicio_evento_propuesta" name="tiempo_inicio_evento_propuesta" class="inputpz form-control " placeholder="Hora que inicio"  required>
+                                </div>
+                                <div class="col-xs-6" style="padding:0 0 0 5px!important;">
+                                    <input onfocus="(this.type='time')" type="text" id="tiempo_fin_evento_propuesta" name="tiempo_fin_evento_propuesta" class="inputpz form-control " placeholder="Hora que termina"  required>
+                                </div>
+                                <div class="col-xs-12" style="padding:0!important;">
+                                    <input type="text" id="costo_evento_propuesta" name="costo_evento_propuesta" class="inputpz form-control " placeholder="Costo de entrada" required autofocus="">
+                                	
+                                </div>
+                                
+                                <button id="proponerEventoButton" class="btn btn-lg btn-primary btn-block bg-naranja" type="submit">PROPONER</button>
+                            </form>
+                        
+                    </div>
+                </div>
+            </screen>
+             <screen class="screen nivel3" id="comentarios_screen" style="display:none;">
+            	<div class="screen-header">
+                    
+                    <div class='text-header' style="width:230px;">Comentarios</div>
+                    <button class='cerrar' onclick="comentariosScreen.comentariosPantalla.hide();">X</button>
+                   
+                </div>
+
+            	<div class="container2" style="overflow-y:scroll;padding-bottom:160px;">
+            		
+            			<ul class="list comentarios-list" id="comentarios_list">
+            			<li>
+	            			<div style="position:relative;">
+	            				<span class="avatar_comentarios"></span>
+	            				<span class="nombre-comentario">Rodrigo Kestler</span>
+	            				<span class="fecha-comentarios">Hace 2 semanas</span>
+	            			</div>
+	            			<div>
+	            				<p>Esto es un comentario. Estuvo buenisimo</p>
+	            			</div>
+            			</li>
+            			
+            			</ul>
+            		<div class="panel-footer" style="position:absolute;bottom:0;">
+                    <div class="input-group">
+                        <input id="comentario_input" type="text" class="form-control input-md chat_input" placeholder="Escribe tu comentario aqu&iacute;..." />
+                        <span class="input-group-btn">
+                        <button onclick="comentariosScreen.comment();" style="margin:0;"class="btn btn-primary btn-md bg-naranja" id="btn-chat">Enviar</button>
+                        </span>
+                    </div>
+                </div>
+            	</div>
+            </screen>
+        <screen class="screen" id="cartelera_screen" style="">
+            <subscreen class="subscreen" id="sugerencias_eventos" style="display:none;background-image:url(../www/img/Rumbafest/RumbaFest_5.png);width:100%;height:100%;background-size:contain;">
+            </subscreen>
+           
+            <subscreen class="subscreen nivel1" id='single_evento' style="display:none;">
+                <div class="screen-header">
+                    
+                    <button class='home'></button>
+                    <div class='text-header' style="width:230px;">INFORMACI&Oacute;N DE EVENTO</div>
+                    <button class='cerrar' onclick="carteleraScreen.singleSubscreen.single.hide();">X</button>
+                </div>
+                <div class="container2">
+                    <div class="subcontainer">
+                        <div class="wrapper" id="single_evento_wrapper">
+                            <div class="cover_photo_single cover_fiesta">
+                            	<div class="logo_single icon_fiesta bg-negro"></div>
+                            	</div>
+                        	
+                        <div class="banner_evento_single bg-morado">
+                            
+                            <div class="interesados_evento_single">
+                                <div class="div_corazon_interesados_evento_single">
+                                    <button class="boton_interes_evento_single"><i class="fa fa-heart" aria-hidden="true"></i>
+                                    </button>
+                                    <span style="opacity:0.5;">Interesados</span>
+                                </div>
+                                <div class="cant_interesados_evento_single">
+                                    <span>55</span>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="content_evento_single">
+                            <div style="display:inline-block;width:30px;height:200px;float:left">
+                                <div class='single_evento_icono1'>
+                                </div>
+                                <div class="single_evento_icono2">
+                                </div>
+                                <div class="single_evento_icono3">
+                                </div>
+                            </div>
+                            <div style="display:inline-block;width:90%;height:200px;float:left">
+                                <div class="single_evento_tipo_texto">Noche de Kareoke
+                                </div>
+                                <div class="single_evento_texto">09 de Enero 12:00 PM - 1:00 AM</div>
+                                <div class="single_evento_texto">00 calle 0-00 zona 0 <a style="color:black;text-decoration:underline;">Ver mapa</a></div>
+                                <div class="single_evento_texto">Q0.00</div>
+                                <div class="single_evento_texto">Descripcion Lorem impsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum
+                                Lorem impsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum</div>
+                            </div>
+                            <div style="display:inline-block;width:100%;margin-bottom:20px;position:relative;">
+                                <button class="compartir_evento" style="color:transparent;float:right;width:30px;height:30px;background-image:url(../www/img/iconos/icono-cartelera-compartir.png);background-size:contain;background-repeat:no-repeat;"></button>
+                                <button class="comentar" style="color:transparent;float:right;width:30px;height:30px;background-image:url(../www/img/iconos/icono-cartelera-comentarios.png);background-size:contain;background-repeat:no-repeat;margin-right:15px;"></button>
+                                <div class="cant_comentarios_single">0</div>
+                            </div>
+                            <div style="margin-top: 10px;position: absolute;bottom: -20px;">
+                                <span>Personas interesadas</span>
+                            </div>
+                        </div>
+                        <hr style="border-top:1px solid black">
+                        <div id="listado_interesados" style="width:100%;height:400px;">
+                            <ul style="list-style-type:none;margin-left:20px">
+                                <li>Mis Amigos</li>
+                                <li><span class="avatar_amigos_single_evento"></span>Rodrigo Kestler</li>
+                                <li><span class="avatar_amigos_single_evento"></span>Rodrigo Kestler</li>
+                                <li><span class="avatar_amigos_single_evento"></span>Rodrigo Kestler</li>
+                                <li><span class="avatar_amigos_single_evento"></span>Rodrigo Kestler</li>
+                                <li><span class="avatar_amigos_single_evento"></span>Rodrigo Kestler</li>
+                                <li>Otros</li>
+                                <li><span class="avatar_amigos_single_evento"></span>Rodrigo Kestler</li>
+                                <li><span class="avatar_amigos_single_evento"></span>Rodrigo Kestler</li>
+                                <li><span class="avatar_amigos_single_evento"></span>Rodrigo Kestler</li>
+                            </ul>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            </subscreen>
+            <subscreen class="subscreen" id="listado_eventos" style=''>
+                <div class="screen-header">
+                    <button class='home'></button>
+                    <button class="eventos_header_button" onclick="carteleraScreen.eventosSubscreen.get();">EVENTOS</button>
+                    <button onclick="carteleraScreen.lugaresSubscreen._show();" class="lugares_header_button" style="opacity:0.5;">LUGARES</button>
+                    <button class='menu'><i class="fa fa-bars" aria-hidden="true"></i></button>
+                   
+                </div>
+
+            <div class="container2">
+                <div class="sub-header">
+                    <ul style="">
+                        <li>
+                            <label class="switch">
+                              <input type="checkbox" id="check_eventos_listado">
+                              <div class="slider round"></div>
+                            </label>
+                            <div class="corazon" id="corazon_eventos_listado"><i class="fa fa-heart-o" aria-hidden="true"></i></div>
+                        </li>
+                        <li>
+                            <button onclick ="proponerEventoScreen.pantalla.show();" id="proponer_evento" class="bg-naranja">+</button>
+                        </li>
+                        <li style="width:60%!important;">
+                            <div id="div_search">
+                                <input type="text" id="search_eventos">
+                                <i class="fa fa-search" aria-hidden="true"></i>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="subcontainer">
+                    <div class="wrapper" id="list_eventos" style="padding-bottom:140px!important;">
+                        <ul class="list" id="ul_eventos">
+                             <li class="evento">
+                                <div class="cover_photo cover_fiesta">
+                                    <div class="logo icon_fiesta bg-negro">
+                                    </div>
+                                </div>
+                                <div class="banner_evento bg-morado">
+                                    
+                                    <div class="info_evento">
+                                        <div class="nombre_evento font-blanco">Festival de Reggae</div>
+                                        <div class="detalles_evento font-blanco">09 de enero, 12:00 PM - 1:00 AM</div>
+                                    </div>
+                                    <div class="interesados_evento">
+                                        <div class="div_corazon_interesados_evento">
+                                            <button class="boton_interes_evento"><i class="fa fa-heart" aria-hidden="true"></i>
+                                            </button>
+                                            <span style="opacity:0.5;z-index:2;">Interesados</span>
+                                            
+                                        </div>
+                                        <div class="cant_interesados_evento">
+                                            <span>55</span>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </li>
+
+                         </ul>
+                </div>
+                </div>
+            </div>
+        </subscreen>
+        <subscreen class="subscreen" id="listado_lugares" style="display:none;">
+                <div class="screen-header">
+                    <button class='home'></button>
+                    <button onclick="carteleraScreen.eventosSubscreen._show();" style="opacity:0.5;" class="eventos_header_button">EVENTOS</button>
+                    <button class="lugares_header_button" onclick="carteleraScreen.lugaresSubscreen.get();">LUGARES</button>
+                    <button class='menu'><i class="fa fa-bars" aria-hidden="true"></i></button>
+                    
+                </div>
+            <div class="container2">
+                <div class="sub-header">
+                    <ul style="">
+                        
+                        <li>
+                            <button onclick="proponerLugarScreen.pantalla.show();" id="proponer_lugar" class="bg-naranja" >+</button>
+                        </li>
+                        <li>
+                            <div id="div_search">
+                                <input type="text" id="search_lugares">
+                                <i class="fa fa-search" aria-hidden="true"></i>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="subcontainer">
+                    <div class="wrapper" id='list_lugares'>
+                        <ul class="list" id="ul_lugares">
+                        <li class="lugar ">
+                            <div class="div_logo_lugar" style="display:inline-block">
+                                <div class="logo icon_fiesta bg-naranja">
+                                </div>
+                            </div>
+                            <div style="display:inline-block;margin-top:10px;">
+                                <div class="nombre_lugar ">Bar XX</div>
+                                <div class="direccion_lugar detalle_lugar ">0 calle 0-00 zona 0</div>
+                                <div class="horario_lugar detalle_lugar ">12:00 PM - 1:00 PM</div>
+                                <div class="cover_lugar detalle_lugar ">Cover Q0.00</div>
+                            </div>
+                        </li>
+                        <li class="lugar ">
+                            <div class="div_logo_lugar" style="display:inline-block">
+                                <div class="logo icon_fiesta bg-naranja">
+                                </div>
+                            </div>
+                            <div style="display:inline-block;margin-top:10px;">
+                                <div class="nombre_lugar ">Bar XX</div>
+                                <div class="direccion_lugar detalle_lugar ">0 calle 0-00 zona 0</div>
+                                <div class="horario_lugar detalle_lugar ">12:00 PM - 1:00 PM</div>
+                                <div class="cover_lugar detalle_lugar ">Cover Q0.00</div>
+                            </div>
+                        </li>
+                        </ul>
+                    </div>
+                </div>
+                
+            </div>
+        </subscreen>
+        
+
+        </screen>
+        <screen class="screen" id="checkin_screen" style="display:none;">
+            <div class="screen-header">
+                <button class='home'></button>
+                <div class='text-header'>Check In</div>
+                <button class='menu'><i class="fa fa-bars" aria-hidden="true"></i></button>
+                   
+            </div>
+            <div class="container" style="height:100%;">
+                    
+                    <div class="subcontainer2" style="background-image:url(../www/img/rumbafest-checkin.jpg);background-size:contain;    background-size: 105% 104%;
+    height: 100%;
+    margin-top: -57px;">
+                        
+                    </div>
+                </div>
+        </screen>
+        <screen class="screen" id="musica_screen" style="display:none;">
+            <subscreen id="" style="display:">
+                <div class="screen-header">
+                    
+                    <button class='home'></button>
+                    <div class='text-header' style="width:220px;">M&Uacute;SICA DE FIESTA</div>
+                    <button class='menu'><i class="fa fa-bars" aria-hidden="true"></i></button>
+                </div>
+                <div class="container2">
+                    <div class="subcontainer">
+                        <div class="wrapper" style="top:-54px;background-image:url(../www/img/Rumbafest/RumbaFest_30.png);background-size:100% 103%;width:100%;height:100%;">
+                        </div>
+                    </div>
+                </div>
+            </subscreen>
+            <subscreen id="" style="display:none;">
+                <div class="screen-header">
+                    
+                    <button class='home'></button>
+                    <div class='text-header' style="width:220px;">M&Uacute;SICA DE FIESTA</div>
+                    <button class='menu'><i class="fa fa-bars" aria-hidden="true"></i></button>
+                </div>
+                <div class="container2">
+                    <div class="subcontainer">
+                        <div class="wrapper" style="top:-54px;background-image:url(../www/img/Rumbafest/RumbaFest_31.png);background-size:100% 103%;width:100%;height:100%;">
+                        </div>
+                    </div>
+                </div>
+            </subscreen>
+            <subscreen id="" style="display:none">
+                <div class="screen-header">
+                    
+                    <button class='home'></button>
+                    <div class='text-header' style="width:220px;">M&Uacute;SICA DE FIESTA</div>
+                    <button class='menu'><i class="fa fa-bars" aria-hidden="true"></i></button>
+                </div>
+                <div class="container2">
+                    <div class="subcontainer">
+                        <div class="wrapper" style="top:-54px;background-image:url(../www/img/Rumbafest/RumbaFest_32.png);background-size:100% 103%;width:100%;height:100%;">
+                        </div>
+                    </div>
+                </div>
+            </subscreen>
+        </screen>
+
+
+
+
+        <screen class="screen" id="perfil_screen" class="" style='display:none;'>
+            <subscreen id="" style="display:none;">
+                <div class="screen-header">
+                    
+                    <button class='home'></button>
+                    <div class='text-header' style="width:220px;">PERFIL</div>
+                    <button class='menu'><i class="fa fa-bars" aria-hidden="true"></i></button>
+                </div>
+                <div class="container2">
+                    <div class="subcontainer">
+                        <div class="wrapper" style="top:-54px;background-image:url(../www/img/Rumbafest/RumbaFest_22.png);background-size:100% 103%;width:100%;height:100%;">
+                        </div>
+                    </div>
+                </div>
+            </subscreen>
+            <subscreen id="" style="display:none;">
+                <div class="screen-header">
+                    
+                    <button class='home'></button>
+                    <div class='text-header' style="width:220px;">PERFIL</div>
+                    <button class='menu'><i class="fa fa-bars" aria-hidden="true"></i></button>
+                </div>
+                <div class="container2">
+                    <div class="subcontainer">
+                        <div class="wrapper" style="display:flex;flow-direction:column;justify-content:center;">
+                        <!--   <style="top:-54px;background-image:url(../www/img/Rumbafest/RumbaFest_23.png);background-size:100% 103%;width:100%;height:100%;">
+                        -->
+                        	<div class="parte_alta_perfil">
+                        		<div><div class="avatar_perfil"></div></div>
+                        		<div>Rodrigo Kestler<i class="fa fa-pencil"></i></div>
+                        	</div>
+                        	<div class="parte_baja_perfil">
+                        	</div>
+                        </div>
+                    </div>
+                </div>
+            </subscreen>
+            <subscreen id="" style="">
+                <div class="screen-header">
+                    
+                    <button class='home'></button>
+                    <div class='text-header' style="width:220px;">PERFIL</div>
+                    <button class='menu'><i class="fa fa-bars" aria-hidden="true"></i></button>
+                </div>
+                <div class="container2" style="padding-bottom:100px;">
+                    <div class="subcontainer">
+                        <div class="wrapper" id="wrapper_perfil" style="/*display:flex;flex-direction:column;*/">
+                        <!--  <style="top:-54px;background-image:url(../www/img/Rumbafest/RumbaFest_18.png);background-size:100% 103%;width:100%;height:100%;">
+                        -->
+                        <div class="parte_alta_perfil" style="text-align:center;">
+                        	<div>
+                        		<div class="avatar_perfil" style="background-color:black;width:170px;height:170px;border-radius:85px;"></div>
+                        	</div>
+                        	<div>
+                        		<span style="font-size:20px;font-weight:900;">Rodrigo Kestler</span><button></button><i style="margin-left:5px;color:#ccc;" class="fa fa-pencil"></button></i>
+                        	</div>
+                        	<div>
+                        		<form id="form_perfil_datos_user">
+                        			
+                        		 <div><input class="input_perfil_datos" type="text" value="1234-5678" name="tel_perfil" disabled></div>
+                        		 <div><input class="input_perfil_datos" type="text" value="rodrigo@pizotesoft.com" disabled></div>
+                        		 <div><input class="input_perfil_datos" type="text" value="Guatemala" disabled></div>
+                        		 <div><button id="actualizar_datos" class="btn btn-lg btn-primary btn-block bg-naranja">ACTUALIZAR</button></div>
+                        		</form>
+                        		<div><button id="subscribirse_premier" class="btn btn-lg btn-primary btn-block bg-naranja">DESUBSCRIBIRME</button></div>
+                        		<div><button id="desubscribirse_premier" class="btn btn-lg btn-primary btn-block bg-naranja">SUBSCRIBITE A PREMIER</button></div>
+                        		<div>
+	                        		<button id="privacidad_perfil"><i class="fa fa-users" aria-hidden="true"></i></button>
+	                        		<span class="font-morado puntos_user">25 puntos</span>
+                        		</div>
+                        		<div style="position:relative;height:45px;">
+                        			<button class="button_seguidores">
+                        				<div id='cant_seguidores'>14</div>
+                        				<div class="font-gris">Seguidores</div>
+                        			</button>
+                        			<button class="button_seguidos">
+                        				<div id="cant_seguidos">20</div>
+                        				<div class="font-gris">Seguidos</div>
+                        			</button>
+                        		</div>
+                        	</div>
+                        </div>
+                        	<div class="parte_baja_perfil" style="position:relative;">
+                        		<div style="border-bottom:1px solid #ccc;">
+	                        		<div style="text-align:center;display:inline-block;width:32%"><button><i class="fa fa-user-plus" aria-hidden="true"></i></button></div>
+	                        		<div style="text-align:center;display:inline-block;width:32%"><button><i class="fa fa-clock-o" aria-hidden="true"></i></button></div>
+	                        		<div style="text-align:center;display:inline-block;width:32%"><button><i class="fa fa-clock-o" aria-hidden="true"></i></button></div>
+	                        	</div>
+	                        	<div class="contenedor_perfil" id="follow_requests_container">
+	                        		<ul>
+	                        			<li>No tienes ninguna petici&oacute;n pendiente</li>
+	                        		</ul>
+	                        	</div>
+	                        	<div class="contenedor_perfil" id="activity_container">
+	                        		<ul>
+	                        			<li>No tienes ninguna actividad</li>
+	                        		</ul>
+	                        	</div>
+	                        	<div class="contenedor_perfil" id="badges_container">
+	                        		<ul>
+	                        			<li>Badges</li>
+	                        		</ul>
+	                        	</div>
+                        	</div>
+                        </div>
+                    </div>
+                </div>
+            </subscreen>
+            <subscreen id="" style="display:none;">
+                <div class="screen-header">
+                    
+                    <button class='home'></button>
+                    <div class='text-header' style="width:220px;">PERFIL</div>
+                    <button class='menu'><i class="fa fa-bars" aria-hidden="true"></i></button>
+                </div>
+                <div class="container2">
+                    <div class="subcontainer">
+                        <div class="wrapper" style="top:-54px;background-image:url(../www/img/Rumbafest/tOP20-01.jpg);background-size:100% 103%;width:100%;height:100%;">
+                        </div>
+                    </div>
+                </div>
+            </subscreen>
+
+            
+        </screen>
+        <screen class="screen" id="promos_screen" class="" style='display:none;'>
+            <subscreen id="" style="display:;">
+                <div class="screen-header">
+                    
+                    <button class='home'></button>
+                    <div class='text-header' style="width:220px;">PROMOCIONES</div>
+                    <button class='menu'><i class="fa fa-bars" aria-hidden="true"></i></button>
+                </div>
+                <div class="container2">
+                    <div class="subcontainer">
+                        <div class="wrapper" style="top:-54px;background-image:url(../www/img/Rumbafest/RumbaFest_24.png);background-size:100% 103%;width:101%;height:104%;">
+                        </div>
+                    </div>
+                </div>
+            </subscreen>
+            <subscreen id="" style="display:none">
+                <div class="screen-header">
+                    
+                    <button class='home'></button>
+                    <div class='text-header' style="width:220px;">PROMOCIONES</div>
+                    <button class='menu'><i class="fa fa-bars" aria-hidden="true"></i></button>
+                </div>
+                <div class="container2">
+                    <div class="subcontainer">
+                        <div class="wrapper" style="top:-54px;background-image:url(../www/img/Rumbafest/RumbaFest_25.png);background-size:100% 103%;width:101%;height:104%;">
+                        </div>
+                    </div>
+                </div>
+            </subscreen>
+            <subscreen id="" style="display:none">
+                <div class="screen-header">
+                    
+                    <button class='home'></button>
+                    <div class='text-header' style="width:220px;">PROMOCIONES</div>
+                    <button class='menu'><i class="fa fa-bars" aria-hidden="true"></i></button>
+                </div>
+                <div class="container2">
+                    <div class="subcontainer">
+                        <div class="wrapper" style="top:-54px;background-image:url(../www/img/Rumbafest/RumbaFest_26.png);background-size:100% 103%;width:101%;height:104%;">
+                        </div>
+                    </div>
+                </div>
+            </subscreen>
+            <subscreen id="" style="display:none">
+                <div class="screen-header">
+                    
+                    <button class='home'></button>
+                    <div class='text-header' style="width:220px;">PROMOCIONES</div>
+                    <button class='menu'><i class="fa fa-bars" aria-hidden="true"></i></button>
+                </div>
+                <div class="container2">
+                    <div class="subcontainer">
+                        <div class="wrapper" style="top:-54px;background-image:url(../www/img/Rumbafest/RumbaFest_29.png);background-size:100% 103%;width:101%;height:104%;">
+                        </div>
+                    </div>
+                </div>
+            </subscreen>
+            <subscreen id="" style="display:none">
+                <div class="screen-header">
+                    
+                    <button class='home' onclick="app.showScreen(perfilScreen.perfilPantalla,0);"></button>
+                    <div class='text-header' style="width:220px;">PROMOCIONES</div>
+                    <button class='menu'><i class="fa fa-bars" aria-hidden="true"></i></button>
+                </div>
+                <div class="container2">
+                    <div class="subcontainer">
+                        <div class="wrapper" style="top:-54px;background-image:url(../www/img/Rumbafest/RumbaFest_27.png);background-size:100% 103%;width:101%;height:104%;">
+                        </div>
+                    </div>
+                </div>
+            </subscreen>
+        </screen>
+        <footer>
+            <table>
+                <tr>
+                    <td>
+                        <button id="footer-perfil" class="button_footer selected" onclick="app.showScreen(perfilScreen.perfilPantalla,0);"> 
+                        </button>
+                    </td>
+                    <td>
+                    	<div style="position:absolute;top:0;"><div class="circulo"><i style="color:white!important;font-size:10px;" class="fa fa-circle" aria-hidden="true"></i></div></div>
+                        
+                        <button id="footer-cartelera" class="button_footer" onclick="app.showScreen(carteleraScreen.carteleraPantalla,1);">
+                        </button>
+                    </td>  
+                    <td>
+                    	
+                        <button id="footer-promos" class="button_footer" onclick="app.showScreen(promosScreen.promosPantalla,2);">
+                        </button>
+                    </td>   
+                    <td>
+                    	
+                        <button id="footer-musica" class="button_footer" onclick="app.showScreen(musicaScreen.musicaPantalla,3);">
+                        </button>
+                    </td> 
+                    <td>
+                    	
+                        <button id="footer-checkin" class="button_footer" onclick="app.showScreen(checkinScreen.checkinPantalla,4);">
+                        </button>
+                    </td> 
+                    
+                </tr>
+            </table>
+        </footer>
+  
+
+<div id="myModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title" id="myModalHeader"></h4>
+      </div>
+      <div class="modal-body" id="myModalBody">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+<div id="fb-root"></div>
+		<script type="text/javascript" src="cordova.js"></script>
+        <script type="text/javascript" src="js/jQuery.js"></script>
+        <script type="text/javascript" src="js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="js/parsley.js"></script>
+        <script type="text/javascript" src="js/list.js"></script>
+        
+        <script type="text/javascript" src="js/fb.js"></script>
+        <script type="text/javascript" src="js/index.js"></script>
+        
+        
+       
+    </body>
+</html>
