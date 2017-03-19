@@ -43,13 +43,13 @@
     <body>
         
         <screen id="login_screen" style="z-index:25;" class="screen">
-            <div class="container2" style='margin:0!important;'>
-                <div class="container-flex" style="overflow-y:scroll;width:75%;margin:auto 12.5%;">
-                <div class="row">
+            <div class="container2" style='margin:0!important;overflow-y:auto;'>
+                <div class="container-flex" style="overflow-y;auto;width:75%;margin:auto 12.5%;">
+                <div >
                     <div id='login-logo'>
                     </div>
                 </div>
-                <div class="row">
+                <div >
                     <button id="fb_login_button" onclick="fb.login();" class="btn btn-lg btn-primary btn-block bg-naranja">Conectar con 
                         <div id="icono-facebook" style=""></div>
                         </button>
@@ -69,11 +69,11 @@
 						<label class="checkbox-inline" style="float:right;"><input type="checkbox" id="rememberPassword" name="rememberPassword" value="remember">Recordar contrase&ntilde;a</label>
                     
                 </div>
-                <div class="row">
-                    <button onclick="registerScreen.registerPantalla.show();"class="btn btn-link font-negro" style="font-weight:bold;">Registrarse</button>
+                <div >
+                    <button onclick="registerScreen.registerPantalla.show('slide',{direction:'right'},'fast');"class="btn btn-link font-negro" style="font-weight:bold;">Registrarse</button>
                     <button class="btn btn-link font-negro" style="float:right;text-decoration: underline;">Olvid&eacute; mi contrase&ntilde;a</button>
                 </div>
-                <div class="row">
+                <div >
                 	<div style="margin: 20px auto 0;width:200px;">
                 	<a>Pol&iacute;ticas de Uso y Privacidad</a>
                 	</div>
@@ -86,7 +86,7 @@
             <div class="screen-header">
                 
                 <div class='text-header'>CREAR CUENTA</div>
-                <button onclick="registerScreen.registerPantalla.hide();" class='cerrar'>X</button>
+                <button onclick="registerScreen.registerPantalla.hide('slide',{direction:'right'},'fast');" class='cerrar'>X</button>
                    
             </div>
             <div class="container">
@@ -152,18 +152,18 @@
                     <li>Cuenta
                         <ul>
                             <li onclick="user.logout();">Cerrar sesi&oacute;n</li>
-                            <li>Editar mis preferencias de perfil</li>
                         </ul>
                     </li>
                     <li>Social
                         <ul>
                             <li>Invitar amigos</li>
-                            <li>Buscar amigos en Rumbafest</li>
+                            <li><button style="margin:0;" onclick="searchFriends._show();">
+                            	Buscar amigos en Rumbafest</button>
+                            </li>
                         </ul>
                     </li>
                     <li>Soporte
                         <ul>
-                            <li>Ayuda</li>
                             <li>Reglamento</li>
                             <li>Pol&iacute;ticas de uso y privacidad</li>
                             <li>Activar tooltips</li>
@@ -176,15 +176,37 @@
 
                 </ul>
             </div>
-            <div onclick="menuScreen.menu.hide();" id="close_menu" style="height:100%;width:20%;display:inline-block;float:left;background-color:transparent;">
+            <div onclick="menuScreen.menu.hide('slide',{direction:'left'});" id="close_menu" style="height:100%;width:20%;display:inline-block;float:left;background-color:transparent;">
             </div>
         </screen>
+        <screen class="screen" id='buscaramigos_screen' style="display:none;z-index:21">
+                <div class="screen-header">
+                    
+                    <button class='home'></button>
+                    <div class='text-header' style="width:220px;">Buscar amigos</div>
+                    <button class='cerrar' onclick="searchFriends.pantalla.hide('slide',{direction:'right'},'fast');">X</button>
+                </div>
+                <div class="container">
+                    <div class="container-flex" style="overflow:scroll;">
+                    <div class="div_search">
+                         <input type="text" id="search_friends">
+                         <i class="fa fa-search" aria-hidden="true"></i>
+                    </div>
+                        <ul id="list_search_friends">
+                        	<li style="position:relative;">
+                        	Escribe el nombre de la persona que buscas
+                            </li>
+                        </ul>
+                           
+                    </div>
+                </div>
+            </screen>
         <screen class="screen" id='proponer_lugar_screen' style="display:none;z-index:21">
                 <div class="screen-header">
                     
                     <button class='home'></button>
                     <div class='text-header' style="width:220px;">PROPONER LUGAR</div>
-                    <button class='cerrar' onclick="proponerLugarScreen.pantalla.hide();">X</button>
+                    <button class='cerrar' onclick="proponerLugarScreen.pantalla.hide('slide',{direction:'left'},'fast');">X</button>
                 </div>
                 <div class="container">
                     <div class="container-flex" style="overflow:scroll;">
@@ -250,7 +272,7 @@
                     
                     <button class='home'></button>
                     <div class='text-header' style="width:220px;">PROPONER EVENTO</div>
-                    <button class='cerrar' onclick="proponerEventoScreen.pantalla.hide();">X</button>
+                    <button class='cerrar' onclick="proponerEventoScreen.pantalla.hide('slide',{direction:'left'},'fast');">X</button>
                 </div>
                 <div class="container">
                     <div class="container-flex">
@@ -293,7 +315,7 @@
             	<div class="screen-header">
                     
                     <div class='text-header' style="width:230px;">Comentarios</div>
-                    <button class='cerrar' onclick="comentariosScreen.comentariosPantalla.hide();">X</button>
+                    <button class='cerrar' onclick="comentariosScreen.comentariosPantalla.hide('slide',{direction:'right'},'fast');">X</button>
                    
                 </div>
 
@@ -331,7 +353,7 @@
                     
                     <button class='home'></button>
                     <div class='text-header' style="width:230px;">INFORMACI&Oacute;N DE EVENTO</div>
-                    <button class='cerrar' onclick="carteleraScreen.singleSubscreen.single.hide();">X</button>
+                    <button class='cerrar' onclick="carteleraScreen.singleSubscreen.single.hide('slide',{direction:'left'},'fast');">X</button>
                 </div>
                 <div class="container2">
                     <div class="subcontainer">
@@ -420,10 +442,10 @@
                             <div class="corazon" id="corazon_eventos_listado"><i class="fa fa-heart-o" aria-hidden="true"></i></div>
                         </li>
                         <li>
-                            <button onclick ="proponerEventoScreen.pantalla.show();" id="proponer_evento" class="bg-naranja">+</button>
+                            <button onclick ="proponerEventoScreen.pantalla.show('slide',{direction:'left'},'fast');" id="proponer_evento" class="bg-naranja">+</button>
                         </li>
                         <li style="width:60%!important;">
-                            <div id="div_search">
+                            <div class="div_search">
                                 <input type="text" id="search_eventos">
                                 <i class="fa fa-search" aria-hidden="true"></i>
                             </div>
@@ -477,10 +499,10 @@
                     <ul style="">
                         
                         <li>
-                            <button onclick="proponerLugarScreen.pantalla.show();" id="proponer_lugar" class="bg-naranja" >+</button>
+                            <button onclick="proponerLugarScreen.pantalla.show('slide',{direction:'left'},'fast');" id="proponer_lugar" class="bg-naranja" >+</button>
                         </li>
                         <li>
-                            <div id="div_search">
+                            <div class="div_search">
                                 <input type="text" id="search_lugares">
                                 <i class="fa fa-search" aria-hidden="true"></i>
                             </div>
@@ -588,43 +610,8 @@
 
 
         <screen class="screen" id="perfil_screen" class="" style='display:none;'>
-            <subscreen id="" style="display:none;">
-                <div class="screen-header">
-                    
-                    <button class='home'></button>
-                    <div class='text-header' style="width:220px;">PERFIL</div>
-                    <button class='menu'><i class="fa fa-bars" aria-hidden="true"></i></button>
-                </div>
-                <div class="container2">
-                    <div class="subcontainer">
-                        <div class="wrapper" style="top:-54px;background-image:url(../www/img/Rumbafest/RumbaFest_22.png);background-size:100% 103%;width:100%;height:100%;">
-                        </div>
-                    </div>
-                </div>
-            </subscreen>
-            <subscreen id="" style="display:none;">
-                <div class="screen-header">
-                    
-                    <button class='home'></button>
-                    <div class='text-header' style="width:220px;">PERFIL</div>
-                    <button class='menu'><i class="fa fa-bars" aria-hidden="true"></i></button>
-                </div>
-                <div class="container2">
-                    <div class="subcontainer">
-                        <div class="wrapper" style="display:flex;flow-direction:column;justify-content:center;">
-                        <!--   <style="top:-54px;background-image:url(../www/img/Rumbafest/RumbaFest_23.png);background-size:100% 103%;width:100%;height:100%;">
-                        -->
-                        	<div class="parte_alta_perfil">
-                        		<div><div class="avatar_perfil"></div></div>
-                        		<div>Rodrigo Kestler<i class="fa fa-pencil"></i></div>
-                        	</div>
-                        	<div class="parte_baja_perfil">
-                        	</div>
-                        </div>
-                    </div>
-                </div>
-            </subscreen>
-            <subscreen id="" style="">
+         
+            <subscreen id="perfil_subscreen" style="">
                 <div class="screen-header">
                     
                     <button class='home'></button>
@@ -695,25 +682,75 @@
                     </div>
                 </div>
             </subscreen>
-            <subscreen id="" style="display:none;">
+            <subscreen class=" nivel2" id="seguidos_seguidores_subscreen" style="display:none;">
+            	<div class="screen-header">
+                    
+                    <div class='text-header' style="width:230px;" id="header_seg">Seguidos</div>
+                    <button class='cerrar' onclick="perfilScreen.seg_pantalla.hide('slide',{direction:'right'},'fast');">X</button>
+                   
+                </div>
+
+            	<div class="container2" style="overflow-y:scroll;padding-bottom:160px;">
+            		
+            			<ul class="list seg-list" id="seg_list">
+            			<li>
+	            			
+            			</li>
+            			
+            			</ul>
+            		
+            	</div>
+            </screen>
+        </screen>
+        <screen class="screen" id="promos_screen" class="" style='display:none;'>
+        <subscreen id="" style="">
                 <div class="screen-header">
                     
                     <button class='home'></button>
-                    <div class='text-header' style="width:220px;">PERFIL</div>
+                    <div class='text-header' style="width:220px;">PROMOS</div>
                     <button class='menu'><i class="fa fa-bars" aria-hidden="true"></i></button>
                 </div>
-                <div class="container2">
+                <div class="container2" style="padding-bottom:100px;">
                     <div class="subcontainer">
-                        <div class="wrapper" style="top:-54px;background-image:url(../www/img/Rumbafest/tOP20-01.jpg);background-size:100% 103%;width:100%;height:100%;">
+                        <div class="wrapper" id="wrapper_promos" style="/*display:flex;flex-direction:column;*/">
+                        <!--  <style="top:-54px;background-image:url(../www/img/Rumbafest/RumbaFest_18.png);background-size:100% 103%;width:100%;height:100%;">
+                        -->
+                        <div class="parte_alta_promos" style="text-align:center;">
+                        	<div style="width:90%;margin:20px 5%;">
+                        		<div class="imagen_promo">
+                        		</div>
+                        		<div>
+                        			<div style="text-align:center;">Volor noserecus. Fugit, oditio omniet quatibusci
+                        				commodicidus aut lanis dolupta tistorro coresequid
+                        				magnihi temquiandam facculpa qui
+                        			</div>
+                        			<div style="width:80%;margin:10px 10%;">
+                        				<button class="btn btn-lg btn-primary btn-block bg-naranja">CREA TU EQUIPO</button>
+                        			</div>
+                        		</div>
+                        	</div>
+                        </div>
+                        	<div class="parte_baja_promos" style="position:relative;">
+                        		<div style="border-bottom:1px solid #ccc;">
+	                        		<div style="text-align:center;display:inline-block;width:49%"><button><i class="fa fa-list-ul" aria-hidden="true"></i></button></div>
+	                        		<div style="text-align:center;display:inline-block;width:49%"><button><i class="fa fa-user-plus" aria-hidden="true"></i></button></div>
+	                        		</div>
+	                        	<div class="contenedor_promos" id="list_grupos">
+	                        		<ul>
+	                        			<li>Ningun grupo participando</li>
+	                        		</ul>
+	                        	</div>
+	                        	<div class="contenedor_promos" id="invitaciones_grupos">
+	                        		<ul>
+	                        			<li>No tienes niguna invitacion a un equipo</li>
+	                        		</ul>
+	                        	</div>
+                        	</div>
                         </div>
                     </div>
                 </div>
             </subscreen>
-
-            
-        </screen>
-        <screen class="screen" id="promos_screen" class="" style='display:none;'>
-            <subscreen id="" style="display:;">
+            <subscreen id="" style="display:none;">
                 <div class="screen-header">
                     
                     <button class='home'></button>
@@ -792,7 +829,11 @@
                         </button>
                     </td>
                     <td>
-                    	<div style="position:absolute;top:0;"><div class="circulo"><i style="color:white!important;font-size:10px;" class="fa fa-circle" aria-hidden="true"></i></div></div>
+                    	<div style="position:absolute;top:0;">
+                    		<div class="circulo">
+                    			<i style="color:white!important;font-size:10px;" class="fa fa-circle" aria-hidden="true"></i>
+                    		</div>
+                    	</div>
                         
                         <button id="footer-cartelera" class="button_footer" onclick="app.showScreen(carteleraScreen.carteleraPantalla,1);">
                         </button>
@@ -830,7 +871,7 @@
       <div class="modal-body" id="myModalBody">
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
       </div>
     </div>
 
@@ -839,6 +880,7 @@
 <div id="fb-root"></div>
 		<script type="text/javascript" src="cordova.js"></script>
         <script type="text/javascript" src="js/jQuery.js"></script>
+        <script type="text/javascript" src="js/jQueryUI.js"></script>
         <script type="text/javascript" src="js/bootstrap.min.js"></script>
         <script type="text/javascript" src="js/parsley.js"></script>
         <script type="text/javascript" src="js/list.js"></script>

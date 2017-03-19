@@ -22,6 +22,124 @@
     recordarPassword: 'false',
     nombre: '',
     avatar: '',
+    accept_reject_request: function(id_other_user,tipo,boton){
+    	if(tipo=='aceptar'){
+    		var data= {
+              	 accion: 'accept_follow_request',
+               	 user_email: user.correo,
+               	 user_pass: user.password,
+               	 id_follower: id_other_user
+                }
+    	}else if(tipo=='rechazar'){
+    		var data = {
+              	 accion: 'reject_follow_request',
+              	 user_email: user.correo,
+              	 user_pass: user.password,
+              	 id_follower: id_other_user
+               }
+    	}
+    	$.ajax({
+            url:app.url_ajax,
+            dataType: 'text',
+            data: data,
+            type: 'post',
+            timeout: 15000,
+            beforeSend: function(){
+           	 boton.html(app.loader_mini);
+           	 boton.attr('disabled',true);
+            },
+            error: function(a,b,c){
+                console.log('error '+JSON.stringify(a)+JSON.stringify(b));
+                if(tipo=='aceptar'){
+                	boton.html('<i class="fa fa-plus" aria-hidden="true"></i>');
+                }else if(tipo=='rechazar'){
+                	boton.html('<i class="fa fa-times" aria-hidden="true"></i>');
+                }
+                
+                boton.attr('disabled',false);
+            },
+            success: function(a){
+            	console.log(a);
+            	if(a=='1'){
+            		boton.parents('.li-follow-request-perfil').remove();
+    				if(tipo=='aceptar'){
+    					var element =$('#cant_seguidores');
+        				var cant = parseInt(element.html());
+        				cant +=1;
+        				element.html(cant);
+    				}
+            	}else{
+            		if(tipo=='aceptar'){
+                    	boton.html('<i class="fa fa-plus" aria-hidden="true"></i>');
+                    }else if(tipo=='rechazar'){
+                    	boton.html('<i class="fa fa-times" aria-hidden="true"></i>');
+                    }
+                    
+                    boton.attr('disabled',false);
+            	}
+                
+                
+            },
+            complete: function(){
+                
+                
+            }
+
+   	 });
+    },
+    follow_request: function(id_other_user, desde){
+    	if(desde=='single_evento'){
+    		var boton = $('#follow-request-'+id_other_user);
+    	}else if(desde=='perfil'){
+    		var boton = $('#follow-request-perfil-'+id_other_user);
+    	}else if(desde=='search'){
+    		var boton = $('#follow-request-search-'+id_other_user);
+    	}
+    	
+    	
+    	$.ajax({
+            url:app.url_ajax,
+            dataType: 'text',
+            data: {
+           	 accion: 'add_invite_seguir',
+           	 user_email: user.correo,
+           	 user_pass: user.password,
+           	 id_usuario: id_other_user
+            },
+            type: 'post',
+            timeout: 15000,
+            beforeSend: function(){
+           	 boton.html(app.loader_mini);
+           	 boton.attr('disabled',true);
+            },
+            error: function(a,b,c){
+                console.log('error '+JSON.stringify(a)+JSON.stringify(b));
+                boton.html('<i class="fa fa-plus" aria-hidden="true"></i>');
+                boton.attr('disabled',false);
+            },
+            success: function(a){
+            	console.log(a);
+            	if(a=='1'){
+            		if(desde=='single_evento'){
+            			boton.html('<i class="fa fa-check" aria-hidden="true"></i>')
+            		}else if(desde=='perfil'){
+            			boton.html('')
+            		}
+            		
+            	}else{
+            		boton.html('<i class="fa fa-plus" aria-hidden="true"></i>');
+                    boton.attr('disabled',false);
+            	}
+                
+                
+            },
+            complete: function(){
+                
+                
+            }
+
+   	 });
+    },
     initialize : function(){
     	user.recordarPassword = window.localStorage.getItem('recordarPassword');
     	console.log(user.recordarPassword);
@@ -90,7 +208,116 @@ var perfilScreen = {
 	amigosHtml: '<i class="fa fa-users" aria-hidden="true"></i>',
 	privadoHtml: '<i class="fa fa-lock" aria-hidden="true"></i>',
 	todosHtml: '<i class="fa fa-unlock" aria-hidden="true"></i>',
+	header_seg: $('#header_seg'),
+	seg_pantalla: $('#seguidos_seguidores_subscreen'),
+	seg_list: $('#seg_list'),
 	success:false,
+	get_seg:function(tipo){
+		perfilScreen.seg_list.html(app.loader_block);
+		if(tipo=='siguiendo'){
+			perfilScreen.header_seg.html("SEGUIDOS");
+			perfilScreen.seg_pantalla.show('slide',{direction:'right'},'fast');
+			var data = {
+					accion: 'get_siguiendo',
+					user_email: user.correo,
+					user_pass: user.password
+			};
+		}else if(tipo=='seguidores'){
+			perfilScreen.header_seg.html("SEGUIDORES");
+			perfilScreen.seg_pantalla.show('slide',{direction:'right'},'fast');
+			var data = {
+					accion: 'get_seguidores',
+					user_email: user.correo,
+					user_pass: user.password
+			};
+		}
+		$.ajax({
+            url:app.url_ajax,
+            dataType: 'html',
+            data: data,
+            type: 'post',
+            timeout: 15000,
+            error: function(a,b,c){
+                console.log('error '+JSON.stringify(a)+JSON.stringify(b)); carteleraScreen.singleSubscreen.wrapper.html('<li style="text-align:center;">Ocurrio un error. Por favor intenta de nuevo</li>');
+            },
+            success: function(a){
+           	    perfilScreen.seg_list.html(a);
+           	    perfilScreen.seg_pantalla.show();
+           	    if(tipo=='seguidores'){
+           	    	$('.remove-seguidor').click(function(){
+           	    		var id_unfollow = $(this).data('iduser');
+           	    		var boton = $(this);
+           	    		boton.html(app.loader_mini);
+           	    		boton.attr('disabled',true);
+           	    		perfilScreen.stop_following(id_unfollow,'remove',boton);
+           	    	});
+           	    }else if(tipo=='siguiendo'){
+           	    	$('.stop-following').click(function(){
+           	    		var id_unfollow = $(this).data('iduser');
+           	    		var boton = $(this);
+           	    		boton.html(app.loader_mini);
+           	    		boton.attr('disabled',true);
+           	    		perfilScreen.stop_following(id_unfollow,'stop',boton);
+           	    		
+           	    	});
+           	    }
+            },
+            complete: function(){ 
+            }
+   	 });
+	},
+	stop_following:function(id_other,tipo,boton){
+		if(tipo=='remove'){
+			var data = {
+				accion: "remove_follower",
+	            user_email: user.correo,
+	           	user_pass: user.password,	
+	           	id_follower: id_other
+			};
+		}else if(tipo=='stop'){
+			var data = {
+				accion: "stop_following",
+	            user_email: user.correo,
+	           	user_pass: user.password,
+	           	id_following: id_other
+			};
+		}
+		$.ajax({
+            url:app.url_ajax,
+            dataType: 'text',
+            data: data,
+            type: 'post',
+            timeout: 15000,
+            error: function(a,b,c){
+                console.log('error '+JSON.stringify(a)+JSON.stringify(b)); carteleraScreen.singleSubscreen.wrapper.html('<li style="text-align:center;">Ocurrio un error. Por favor intenta de nuevo</li>');
+                boton.html('<i class="fa fa-times" aria-hidden="true"></i>');
+                boton.attr('disabled',false);
+            },
+            success: function(a){
+           	    if(a=='1'){
+           	    	boton.parents('li').remove();
+           	    	if(tipo=='remove'){
+           	    		var element = $('#cant_seguidores');
+           	    		var cant = parseInt(element.html());
+           	    		cant -=1;
+           	    		if(cant<0){cant=0;}
+           	    		element.html(cant);
+           	    	}else if(tipo=='stop'){
+           	    		var element = $('#cant_seguidos');
+           	    		var cant = parseInt(element.html());
+           	    		cant -=1;
+           	    		if(cant<0){cant=0;}
+           	    		element.html(cant);
+           	    	}
+           	    }else{
+           	    	boton.html('<i class="fa fa-times" aria-hidden="true"></i>');
+                    boton.attr('disabled',false);
+           	    }
+            },
+            complete: function(){ 
+            }
+   	 });
+	},
 	update_privacidad: function(privacidad){
 		$.ajax({
             url:app.url_ajax,
@@ -113,6 +340,21 @@ var perfilScreen = {
             }
    	 });
 	},
+	navigator:function(tipo){
+		if(tipo==1){
+			$('#follow_requests_container').show();
+			$('#activity_container').hide();
+			$('#badges_container').hide();
+		}else if(tipo==2){
+			$('#activity_container').show();
+			$('#follow_requests_container').hide();
+			$('#badges_container').hide();
+		}else if(tipo==3){
+			$('#badges_container').show();
+			$('#follow_requests_container').hide();
+			$('#activity_container').hide();
+		}
+	},
 	get: function(){
 		$.ajax({
             url:app.url_ajax,
@@ -133,6 +375,25 @@ var perfilScreen = {
             success: function(a){
            	 
            	 perfilScreen.wrapper.html(a);
+           	$('#form_perfil_datos_user input[type="text"],#form_perfil_datos_user input[type="email"]').focusin(function(){
+           		console.log('input perfil');
+            	perfilScreen.perfilPantalla.find('.container2').scrollTo(this);
+            });
+           	 $('.reject-follow-request').click(function(){
+           		 var id = $(this).data('iduser');
+           		user.accept_reject_request(id,'rechazar',$(this));
+           	 });
+           	 $('.accept-follow-request').click(function(){
+           		var id = $(this).data('iduser');
+           		user.accept_reject_request(id,'aceptar',$(this));
+           	 });
+           	 $('.follow-request-perfil').click(function(){
+           		var id = $(this).data('iduser');
+           		user.follow_request(id,'perfil');
+           	 });
+           	 $('.medalla').click(function(){
+           		 $(this).next().children().show('slide',{direction:'down'},'fast').delay(3000).hide('slide',{direction:'down'},'fast');
+           	 });
            	 $('#privacidad_perfil').change(function(){
            		 var value = $(this).val();
            		 perfilScreen.update_privacidad(value);
@@ -140,10 +401,10 @@ var perfilScreen = {
            	 $('#datos_perfil').click(function(){
            		 console.log('datos perfil click');
            		 $('.input_perfil_datos').attr('disabled',false);
-           		 $('#div_botones_actualizar').show();
+           		 $('#div_botones_actualizar').show('fast');
            	 });
            	 $('#cancelar_actualizar').click(function(){
-           		 $('#div_botones_actualizar').hide();
+           		 $('#div_botones_actualizar').hide('fast');
            		$('.input_perfil_datos').attr('disabled',true);
            		 return false;
            	 });
@@ -176,7 +437,7 @@ var perfilScreen = {
 
    	 });
 	},
-	actualizar_datos(formData){
+	actualizar_datos: function(formData){
 		$.ajax({
             url:app.url_ajax,
             dataType: 'text',
@@ -209,8 +470,12 @@ var comentariosScreen = {
 		comment:function(){//insert_comentario_evento
 			var comentario = comentariosScreen.comentarioInput.val();
 			if(comentario==='' || comentariosScreen.id_evento===null){return true;}
-			comentariosScreen.comentarioInput.val('');
+			
 			console.log(comentario);
+			var cant_element = $('#cant-comment-'+comentariosScreen.id_evento);
+			var cant = parseInt(cant_element.html());
+			cant +=1;
+			cant_element.html(cant);
 			$.ajax({
 	             url:app.url_ajax,
 	             dataType: 'text',
@@ -224,6 +489,9 @@ var comentariosScreen = {
 	             type: 'post',
 	             timeout: 15000,
 	             beforeSend: function(){
+	            	 comentariosScreen.buttonSend.append(app.loader_mini);
+	            	 comentariosScreen.buttonSend.attr('disabled',true);
+	            	 /*
 	            	 var html = '<li>'
 	            			+'<div style="position:relative;">'
 	            				+'<span class="avatar_comentarios" style="background-image:url('+user.avatar+');"></span>'
@@ -233,15 +501,28 @@ var comentariosScreen = {
 	            			+'<div>'
 	            				+'<p>'+comentario+'</p>'
 	            			+'</div></li>';
-	            	 comentariosScreen.ul.append(html);
+	            	 comentariosScreen.ul.append(html);*/
 	             },
 	             error: function(a,b,c){
 	                 console.log('error '+JSON.stringify(a)+JSON.stringify(b)); carteleraScreen.singleSubscreen.wrapper.html('<li style="text-align:center;">Ocurrio un error. Por favor intenta de nuevo</li>');
 	             },
 	             success: function(a){
 	            	 console.log(a);
+	            	 if(a!='0'){
+	            		 comentariosScreen.ul.append(a); 
+	            		 comentariosScreen.comentarioInput.val('');
+	            		 $('.delete-comment').click(function(){
+		            		 var id = $(this).data('id');
+		            		 comentariosScreen.deleteComment(id);
+		            	 });
+	            	 }else{
+	            		 
+	            	 }
+	            	 
 	             },
 	             complete: function(){
+	            	 comentariosScreen.buttonSend.html('ENVIAR');
+	            	 comentariosScreen.buttonSend.attr('disabled',false);
 	             }
 	    	 });
 		},
@@ -266,6 +547,10 @@ var comentariosScreen = {
 	             success: function(a){
 	            	 
 	            	 comentariosScreen.ul.html(a);
+	            	 $('.delete-comment').click(function(){
+	            		 var id = $(this).data('id');
+	            		 comentariosScreen.deleteComment(id);
+	            	 });
 	             },
 	             complete: function(){
 	                 
@@ -273,10 +558,52 @@ var comentariosScreen = {
 	             }
 
 	    	 });
+		},
+		deleteComment: function(id_comment){
+			console.log('delete '+id_comment);
+			$('#comment-'+id_comment).remove();
+			var cant_element = $('#cant-comment-'+comentariosScreen.id_evento);
+			var cant = parseInt(cant_element.html());
+			cant -=1;
+			cant_element.html(cant);
+			$.ajax({
+	             url:app.url_ajax,
+	             dataType: 'html',
+	             data: {
+	            	 accion: 'borrar_comentario',
+	            	 user_email: user.correo,
+	            	 user_pass: user.password,
+	            	 comment_id: id_comment
+	             },
+	             type: 'post',
+	             timeout: 15000,
+	             beforeSend: function(){
+	            	 
+	             },
+	             error: function(a,b,c){
+	                 console.log('error '+JSON.stringify(a)+JSON.stringify(b)); carteleraScreen.singleSubscreen.wrapper.html('<li style="text-align:center;">Ocurrio un error. Por favor intenta de nuevo</li>');
+	             },
+	             success: function(a){
+	             },
+	             complete: function(){
+	             }
+
+	    	 });
 		}
 };
 var promosScreen = {
-	promosPantalla: $('#promos_screen')
+	promosPantalla: $('#promos_screen'),
+	wrapper: $('#wrapper_promos'),
+	get: function(){
+		//promosScreen.wrapper.html(app.loader_block);
+	},
+	navigate: function(tipo){
+		if(tipo==1){
+			
+		}else if(tipo==2){
+			
+		}
+	}
 };
 var musicaScreen = {
 	musicaPantalla: $('#musica_screen'),
@@ -297,6 +624,9 @@ var proponerEventoScreen = {
     	  .removeAttr('selected');
     },
 	bindEvents: function(){
+		$('#proponer_evento_form input[type="text"]').focusin(function(){
+        	proponerEventoScreen.pantalla.find('.container').scrollTo(this);
+        });
 		proponerEventoScreen.form.parsley().on('form:success',function(){
 			proponerEventoScreen.success = true;
 			proponerEventoScreen.button.append(app.loader);
@@ -339,8 +669,9 @@ var proponerEventoScreen = {
             },
             success: function(a){
            	 console.log(JSON.stringify(a));
+           	
+           	 proponerEventoScreen.pantalla.hide('slide',{direction:'right'},'fast');
            	 proponerEventoScreen.clean();
-           	 proponerEventoscreen.pantalla.hide();
            	 myModal.modalHeader.html('&Eacute;xito');
            	 myModal.modalBody.html('Muchas gracias! Tu evento se ha propuesto exitosamente. Lo estaremos evaluando para agregarlo a nuestra cartelera!');
            	 myModal.modal.modal();
@@ -401,6 +732,9 @@ var proponerLugarScreen = {
 			});
 		},
 	bindEvents: function(){
+		$('#proponer_lugar_form input[type="text"]').focusin(function(){
+        	proponerLugarScreen.pantalla.find('.container').scrollTo(this);
+        });
 		proponerLugarScreen.select.change(function(){
 			var value = $(this).val();
 			if(value=='bar'){
@@ -466,7 +800,7 @@ var proponerLugarScreen = {
 	           			$(this).remove();
 	           		}
 	           	});
-	           	proponerLugarScreen.pantalla.hide();
+	           	proponerLugarScreen.pantalla.hide('slide',{direction:'right'},'fast');
 	           	myModal.modalHeader.html('&Eacute;xito');
 	          	myModal.modalBody.html('Muchas gracias! El lugar se ha propuesto exitosamente. Lo estaremos evaluando para agregarlo a nuestro listado!');
 	          	myModal.modal.modal();
@@ -486,7 +820,7 @@ var carteleraScreen = {
 	loadVariables: function(){
 		carteleraScreen.currentSubscreen = carteleraScreen.eventosSubscreen.eventos;
 	},
-	clickHeart: function(tipo, id_evento){
+	clickHeart: function(tipo, id_evento,desde_single){
 		var data = {
 	            user_email: user.correo,
 	            user_pass: user.password,
@@ -494,10 +828,37 @@ var carteleraScreen = {
 			};
 		if(tipo===1){
 			data.accion = 'me_interesa';
+			var cant_element = $('#cant-int-'+id_evento);
+			
+			var cant = parseInt(cant_element.html());
+			cant +=1;
+			cant_element.html(cant);
+			if(desde_single!==undefined && desde_single===true){
+				var cant_single_element = $('#single-cant-int-'+id_evento);
+				var corazon = $('#corazon-'+id_evento).find('i');
+				cant_single_element.html(cant);
+				corazon.removeClass('fa-heart-o');
+       		 	corazon.addClass('fa-heart');
+			}
+			
+			
 		}else if(tipo===2){
 			data.accion = 'no_me_interesa'; //desde sugerencias
 		}else if(tipo===3){
 			data.accion = 'ya_no_interesa';
+			var cant_element = $('#cant-int-'+id_evento);
+			var cant = parseInt(cant_element.html());
+			cant -=1;
+			if(cant<0){cant=0;}
+			cant_element.html(cant);
+			
+			if(desde_single!==undefined && desde_single===true){
+				var cant_single_element = $('#single-cant-int-'+id_evento);
+				var corazon = $('#corazon-'+id_evento).find('i');
+				cant_single_element.html(cant);
+				corazon.removeClass('fa-heart');
+       		 	corazon.addClass('fa-heart-o');
+			}
 		}
 		console.log(JSON.stringify(data));
 		$.ajax({
@@ -548,6 +909,12 @@ var carteleraScreen = {
 	             success: function(a){
 	                 
 	                 carteleraScreen.singleSubscreen.wrapper.html(a);
+	                 $('.follow-request').click(function(){
+	                	 console.log('click');
+	                	 var user_id = $(this).data('iduser');
+	                	 console.log(user_id);
+	                	 user.follow_request(user_id,'single_evento');
+	                 });
 	                 $(".boton_interes_evento_single").click(function(){
 	                	 console.log('click boton interes single');
 	                	 var id=$(this).data('id');
@@ -555,17 +922,17 @@ var carteleraScreen = {
 	                	 if(first.hasClass('fa-heart')){
 	                		 first.removeClass('fa-heart');
 	                		 first.addClass('fa-heart-o');
-	                		 carteleraScreen.clickHeart(3,id); //ya no me interesa
+	                		 carteleraScreen.clickHeart(3,id,true); //ya no me interesa
 	                	 }else{
 	                		 first.removeClass('fa-heart-o');
 	                		 first.addClass('fa-heart');
-	                		 carteleraScreen.clickHeart(1,id); //me interesa
+	                		 carteleraScreen.clickHeart(1,id,true); //me interesa
 	                	 }
 	                 });
 	                 $('.comentar').click(function(){
 	                	 comentariosScreen.id_evento = $(this).data('id');
 	                	 comentariosScreen.get();
-	                	 comentariosScreen.comentariosPantalla.show();
+	                	 comentariosScreen.comentariosPantalla.show('slide',{direction:'right'});
 	                 });
 	             },
 	             complete: function(){
@@ -658,8 +1025,9 @@ var carteleraScreen = {
 		                 carteleraScreen.eventosSubscreen.list = new List('list_eventos',options);
 		                 $('.cover_photo, .logo, .info_evento').click(function(){
 		                	 var id = $(this).parents('.evento').data('id');
-		                	 carteleraScreen.singleSubscreen.single.show();
 		                	 carteleraScreen.singleSubscreen.get(id); 
+		                	 carteleraScreen.singleSubscreen.single.show('slide',{direction:'left'},'fast');
+		                	 
 		                 });
 		                 $(".boton_interes_evento").click(function(){
 		                	 console.log('click interes evento');
@@ -766,11 +1134,9 @@ var registerScreen = {
     pass2: $('#registerPass2'),
     success: false,
     loadScreenEvents: function(){
-        /*$('#registerForm input[type="text"]').focusin(function(){
-        	console.log('focusin');
-        	registerScreen.registerPantalla.find('.container-flex').scrollTo(this);
-        	console.log(this);
-        });*/
+        $('#registerForm input[type="text"]').focusin(function(){
+        	registerScreen.registerPantalla.find('.container').scrollTo(this);
+        });
         registerScreen.registerForm.parsley().on('form:success',function(){
         	registerScreen.success = true;
         	registerScreen.registerButton.append(app.loader);
@@ -822,7 +1188,7 @@ var registerScreen = {
                  if(a.msj_error === undefined && a.success==='1'){
                      user.setProps(formDataRegister.user_email,formDataRegister.user_pass1,'false');
                      
-                     registerScreen.registerPantalla.hide();
+                     registerScreen.registerPantalla.hide('slide',{direction:'left'},'fast');
                      registerScreen.clean();
     	 			 loginScreen.loginPantalla.hide();
     	 			 carteleraScreen.eventosSubscreen.get();
@@ -849,6 +1215,9 @@ var loginScreen = {
     recordarPassword : $('#rememberPassword'),
     success:false,
     loadScreenEvents: function(){
+    	$('#loginForm input[type="text"]').focusin(function(){
+        	loginScreen.loginPantalla.find('.container2').scrollTo(this);
+        });
         console.log('..loading login events');
         loginScreen.loginForm.parsley().on('form:success',function(){
             console.log('success form parsley');
@@ -893,8 +1262,9 @@ var loginScreen = {
                         user.setProps(formData.user_email,formData.user_pass,(loginScreen.recordarPassword.prop('checked')+''));
                     	user.nombre = a.data.display_name;
                     	user.avatar = a.data.avatar;
-                        loginScreen.loginPantalla.hide();
+                        loginScreen.loginPantalla.hide('slide',{direction:'left'},'fast');
                     	carteleraScreen.eventosSubscreen.get();
+                    	app.showScreen(carteleraScreen.carteleraPantalla,1);
                         
                     }else{
                     	myModal.open('Error',a.msj_error);
@@ -920,7 +1290,45 @@ var loginScreen = {
 var menuScreen = {
 	menu: $('#menu_principal'),
 };
-
+var searchFriends = {
+	pantalla: $('#buscaramigos_screen'),
+	search: $('#search_friends'),
+	ajax : null,
+	ul: $('#list_search_friends'),
+	search_friends: function(val){
+		if(val=='' || val.length<3){return true;}
+		
+		if(searchFriends.ajax != null){
+			searchFriends.ajax.abort();
+			searchFriends.ajax = null;
+		}
+		searchFriends.ajax = $.ajax({
+            url:app.url_ajax,
+            dataType: 'html',
+            data: {
+            	accion: 'search_people',
+            	user_email: user.correo,
+           	 	user_pass: user.password,
+           	 	s: val
+            },
+            type: 'post',
+            timeout: 15000,
+            error: function(a,b,c){
+                console.log('error '+JSON.stringify(a)+JSON.stringify(b)); carteleraScreen.singleSubscreen.wrapper.html('<li style="text-align:center;">Ocurrio un error. Por favor intenta de nuevo</li>');
+                
+            },
+            success: function(a){
+           	    searchFriends.ul.html(a);
+            },
+            complete: function(){ 
+            }
+   	 });
+	},
+	_show: function(){
+		menuScreen.menu.hide('slide',{direction:'left'},'fast');
+		searchFriends.pantalla.show('slide',{direction:'right'},'fast');
+	}
+};
 var app = {
     // Application Constructor
 	footer_select_html: '<div style="position:absolute;top:0;"><div class="circulo"><i style="color:white!important;font-size:10px;" class="fa fa-circle" aria-hidden="true"></i></div></div>',
@@ -938,6 +1346,7 @@ var app = {
     url_ajax : 'http://rumba.clx.mobi/wp-admin/admin-ajax.php',
     loader_block: '<div style="display:block;margin:0 auto;width:40px;"><i class="fa fa-cog fa-spin" style="font-size:30px;font-color:black;"></i></div>',
     loader : '<div style="display:inline-block;margin:0 auto;width:40px;"><i class="fa fa-cog fa-spin" style="font-size:30px;font-color:black;"></i></div>',
+    loader_mini : '<i class="fa fa-cog fa-spin" style="font-size:11px;font-color:black;"></i>',
     initialize: function() {
         
         //if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
@@ -945,16 +1354,19 @@ var app = {
     	if(false){  
         	console.log('es movil');
         	document.addEventListener("deviceready", this.onDeviceReady, false);
-        } else {
+        }else {
         	console.log('no es movil');
             app.onDeviceReady();
         }
     },
     loadEvents: function(){
-    	$('.menu').click(function(){menuScreen.menu.show();});
+    	$('.menu').click(function(){menuScreen.menu.show('slide',{direction:'left'});});
         app.current_footer 	 = app.footer.cartelera;
-        
-    	
+        searchFriends.search.on('input',function(){
+        	console.log('search friends');
+        	var val = $(this).val();
+        	searchFriends.search_friends(val);
+        });
     },	
     history: [],
     backButton: function(e){
@@ -991,10 +1403,13 @@ var app = {
     	
     	switch(indexFooter){
     		case 0:
-    			app.current_screen = perfilScreen.perfilPantalla;
-    			app.current_screen.show();
-    			app.current_footer = app.footer.perfil;
-    			app.current_footer.parent().prepend(app.footer_select_html);
+    			if(app.current_screen!=screenToShow){
+    				app.current_screen = perfilScreen.perfilPantalla;
+        			app.current_screen.show();
+        			app.current_footer = app.footer.perfil;
+        			app.current_footer.parent().prepend(app.footer_select_html);
+    			}
+    			
     			perfilScreen.get();
     			break;
     		case 1:
@@ -1010,22 +1425,32 @@ var app = {
     			
     			break;
     		case 2:
-    			app.current_screen = promosScreen.promosPantalla;
-    			app.current_screen.show();
-    			app.current_footer = app.footer.promos;
-    			app.current_footer.parent().prepend(app.footer_select_html);
+    			if(app.current_screen!=screenToShow){
+    				app.current_screen = promosScreen.promosPantalla;
+        			app.current_screen.show();
+        			app.current_footer = app.footer.promos;
+        			app.current_footer.parent().prepend(app.footer_select_html);
+    			}
+    			promosScreen.get();
+    			
     			break
     		case 3:
-    			app.current_screen = musicaScreen.musicaPantalla;
-    			app.current_screen.show();
-    			app.current_footer = app.footer.musica;
-    			app.current_footer.parent().prepend(app.footer_select_html);
+    			if(app.current_screen!=screenToShow){
+    				app.current_screen = musicaScreen.musicaPantalla;
+        			app.current_screen.show();
+        			app.current_footer = app.footer.musica;
+        			app.current_footer.parent().prepend(app.footer_select_html);
+    			}
+    			
     			break
     		case 4:
-    			app.current_screen = checkinScreen.checkinPantalla;
-    			app.current_screen.show();
-    			app.current_footer = app.footer.checkin;
-    			app.current_footer.parent().prepend(app.footer_select_html);
+    			if(app.current_screen!=screenToShow){
+    				app.current_screen = checkinScreen.checkinPantalla;
+        			app.current_screen.show();
+        			app.current_footer = app.footer.checkin;
+        			app.current_footer.parent().prepend(app.footer_select_html);
+    			}
+    			
     			break;
     	}
     	app.current_screen = screenToShow;
