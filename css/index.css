@@ -482,7 +482,7 @@ input:checked + .slider:before {
     width:100%;
 }
 .div_search input{
-    width: 85%;
+    width: 82%;
     padding: 0;
     margin: 2px 0 0 10px!important;
     border: none;
