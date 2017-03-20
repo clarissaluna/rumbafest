@@ -211,6 +211,12 @@ var perfilScreen = {
 	header_seg: $('#header_seg'),
 	seg_pantalla: $('#seguidos_seguidores_subscreen'),
 	seg_list: $('#seg_list'),
+	modal: $("modal_badges"),
+	modal_body: $('#modal_badges_body'),
+	showModal: function(tipo){
+		perfilScreen.modal.show();
+		
+	},
 	success:false,
 	get_seg:function(tipo){
 		perfilScreen.seg_list.html(app.loader_block);
@@ -392,7 +398,8 @@ var perfilScreen = {
            		user.follow_request(id,'perfil');
            	 });
            	 $('.medalla').click(function(){
-           		 $(this).next().children().show('slide',{direction:'down'},'fast').delay(3000).hide('slide',{direction:'down'},'fast');
+           		 //$(this).next().children().show('slide',{direction:'down'},'fast').delay(3000).hide('slide',{direction:'down'},'fast');
+           		 perfilScreen.modal.showModal();
            	 });
            	 $('#privacidad_perfil').change(function(){
            		 var value = $(this).val();
@@ -491,17 +498,6 @@ var comentariosScreen = {
 	             beforeSend: function(){
 	            	 comentariosScreen.buttonSend.append(app.loader_mini);
 	            	 comentariosScreen.buttonSend.attr('disabled',true);
-	            	 /*
-	            	 var html = '<li>'
-	            			+'<div style="position:relative;">'
-	            				+'<span class="avatar_comentarios" style="background-image:url('+user.avatar+');"></span>'
-	            				+'<span class="nombre-comentario">'+user.nombre+'</span>'
-	            				+'<span class="fecha-comentarios">Justo Ahora</span>'
-	            				+'</div>'
-	            			+'<div>'
-	            				+'<p>'+comentario+'</p>'
-	            			+'</div></li>';
-	            	 comentariosScreen.ul.append(html);*/
 	             },
 	             error: function(a,b,c){
 	                 console.log('error '+JSON.stringify(a)+JSON.stringify(b)); carteleraScreen.singleSubscreen.wrapper.html('<li style="text-align:center;">Ocurrio un error. Por favor intenta de nuevo</li>');
@@ -594,8 +590,34 @@ var comentariosScreen = {
 var promosScreen = {
 	promosPantalla: $('#promos_screen'),
 	wrapper: $('#wrapper_promos'),
+	get_ajax : null,
 	get: function(){
-		//promosScreen.wrapper.html(app.loader_block);
+		if(promosScreen.get_ajax != null){return true;}
+		promosScreen.wrapper.html(app.loader_block);
+		promosScreen.get_ajax = $.ajax({
+            url:app.url_ajax,
+            dataType: 'html',
+            data: {
+           	 accion: 'get_promos',
+           	 user_email: user.correo,
+           	 user_pass: user.password
+            },
+            type: 'post',
+            timeout: 15000,
+            beforeSend: function(){
+           	 
+            },
+            error: function(a,b,c){
+                console.log('error '+JSON.stringify(a)+JSON.stringify(b)); carteleraScreen.singleSubscreen.wrapper.html('<li style="text-align:center;">Ocurrio un error. Por favor intenta de nuevo</li>');
+            },
+            success: function(a){
+            	promosScreen.wrapper.html(a);
+            },
+            complete: function(){
+            	promosScreen.get_ajax = null;
+            }
+
+   	 });
 	},
 	navigate: function(tipo){
 		if(tipo==1){
