@@ -612,6 +612,7 @@ var promosScreen = {
             },
             success: function(a){
             	promosScreen.wrapper.html(a);
+            	
             },
             complete: function(){
             	promosScreen.get_ajax = null;
@@ -619,11 +620,13 @@ var promosScreen = {
 
    	 });
 	},
-	navigate: function(tipo){
+	navigator: function(tipo){
 		if(tipo==1){
-			
+			$('#invitaciones_grupos').show();
+			$('#list_grupos').hide();
 		}else if(tipo==2){
-			
+			$('#invitaciones_grupos').hide();
+			$('#list_grupos').show();
 		}
 	}
 };
