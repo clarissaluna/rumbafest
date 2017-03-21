@@ -594,7 +594,34 @@ var promosScreen = {
 	grupos: $('#mi_grupo_screen'),
 	form: $('#form_crear_grupo'),
 	boton_form: $('#crear_grupo'),
+	invite_grupos_list: $('#invite_grupos_list'),
 	success: false,
+	get_possible_friends: function(id_grupo){
+		$.ajax({
+            url:app.url_ajax,
+            dataType: 'html',
+            data: {
+            	accion:'get_possible_friends_grupos'
+            	id_grupo,
+            	user_email: user.correo,
+           	 	user_pass: user.password,
+            },
+            type: 'post',
+            timeout: 15000,
+            beforeSend: function(){
+           	 promosScreen.invite_grupos_list.html(app.loader);
+            },
+            error: function(a,b,c){
+                console.log('error '+JSON.stringify(a)+JSON.stringify(b)); carteleraScreen.singleSubscreen.wrapper.html('<li style="text-align:center;">Ocurrio un error. Por favor intenta de nuevo</li>');
+                
+            },
+            success: function(a){
+            	promosScreen.invite_grupos_list.html(a);
+            },
+            complete: function(){
+            }	 
+        });
+	},
 	crear_grupo: function(formData){
 		$.ajax({
             url:app.url_ajax,
@@ -614,8 +641,11 @@ var promosScreen = {
     	        myModal.modal.modal();
             },
             success: function(a){
+            	console.log(JSON.stringify(a));
             	if(a.success=='1'){
-            		
+            		$('#div_form_crear_grupo').remove();
+            		$('#div_boton_grupo').html(a.html);
+            		promosScreen.get_possible_friends(a.id);
             	}else{
             		promosScreen.boton_form.append(app.loader);
         			promosScreen.boton_form.prop('disabled',true);
