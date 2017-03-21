@@ -749,14 +749,14 @@
                 <div class="screen-header">
                     
                     <div class='text-header' style="width:220px;">TU GRUPO</div>
-                    <button class='cerrar' onclick="perfilPromos.grupos.hide('slide',{direction:'right'},'fast');">X</button>
+                    <button class='cerrar' onclick="promosScreen.grupos.hide('slide',{direction:'right'},'fast');">X</button>
                    
                 </div>
                 <div class="container2" style="overflow-y:scroll;padding-bottom:160px;">
                 	<div id="div_form_crear_grupo" style="width:90%;margin:0 5%;">
             			<form id="form_crear_grupo">
-            			<div><input class="input_grupos_promos form-control inputpz " required type="text" placeholder="Escribe el nombre de tu grupo" name="nombre_grupo" disabled></div>
-                    	
+            			<div><input class="input_grupos_promos form-control inputpz " required type="text" placeholder="Escribe el nombre de tu grupo" name="nombre_grupo" ></div>
+                    	<input type="hidden"  id="id_promo_crear_grupo" name="id_promo">
                         <button type="submit" id="crear_grupo" class="btn btn-lg btn-primary btn-block bg-naranja" style="width:45%;margin:20px auto;">CREAR</button>
                         
             			</form>

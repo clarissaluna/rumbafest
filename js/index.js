@@ -602,7 +602,7 @@ var promosScreen = {
             dataType: 'html',
             data: {
             	accion:'get_possible_friends_grupos',
-            	id_grupo,
+            	id_grupo:id_grupo,
             	user_email: user.correo,
            	 	user_pass: user.password,
             },
@@ -625,7 +625,7 @@ var promosScreen = {
 	crear_grupo: function(formData){
 		$.ajax({
             url:app.url_ajax,
-            dataType: 'text',
+            dataType: 'json',
             data: formData,
             type: 'post',
             timeout: 15000,
@@ -705,7 +705,8 @@ var promosScreen = {
             	promosScreen.wrapper.html(a);
             	$('.btn-grupos-promos').click(function(){
             		var tipo = $(this).data('type');
-            		promosScreen.boton_grupo(tipo);
+            		var id_promo = $(this).data('idpromocion');
+            		promosScreen.boton_grupo(tipo,id_promo);
             	});
             },
             complete: function(){
@@ -713,12 +714,14 @@ var promosScreen = {
             }	 
         });
 	},
-	boton_grupo: function(tipo){
+	boton_grupo: function(tipo,id_promo){
 		if(tipo=='crear'){
+			$('#id_promo_crear_grupo').val(id_promo);
 			promosScreen.grupos.show('slide',{direction:'right'},'fast');
 			return true;
-		}else if(tpo=='editar'){
-			
+		}else if(tipo=='editar'){
+			promosScreen.grupos.show('slide',{direction:'right'},'fast');
+			promosScreen.get_possible_friends(id_promo);
 		}
 	},
 	navigator: function(tipo){
@@ -1514,6 +1517,7 @@ var app = {
         proponerLugarScreen.bindEvents();
         carteleraScreen.eventosSubscreen.bindEvents();
         carteleraScreen.lugaresSubscreen.bindEvents();
+        promosScreen.bindEvents();
         app.loadEvents();
         user.initialize();
     },

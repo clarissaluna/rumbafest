@@ -861,7 +861,7 @@ input:checked + .slider:before {
     background-position:center;
 }
 
-.listado_amigos_single{
+.listado_amigos_single, .listado_possible_amigos_grupos{
 	margin:0 0 0 25px;
 	display:inline-block;
 	line-height:30px;
