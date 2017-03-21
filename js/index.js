@@ -601,7 +601,7 @@ var promosScreen = {
             url:app.url_ajax,
             dataType: 'html',
             data: {
-            	accion:'get_possible_friends_grupos'
+            	accion:'get_possible_friends_grupos',
             	id_grupo,
             	user_email: user.correo,
            	 	user_pass: user.password,
