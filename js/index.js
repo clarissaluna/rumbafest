@@ -591,6 +591,67 @@ var promosScreen = {
 	promosPantalla: $('#promos_screen'),
 	wrapper: $('#wrapper_promos'),
 	get_ajax : null,
+	grupos: $('#mi_grupo_screen'),
+	form: $('#form_crear_grupo'),
+	boton_form: $('#crear_grupo'),
+	success: false,
+	crear_grupo: function(formData){
+		$.ajax({
+            url:app.url_ajax,
+            dataType: 'text',
+            data: formData,
+            type: 'post',
+            timeout: 15000,
+            beforeSend: function(){
+           	 
+            },
+            error: function(a,b,c){
+                console.log('error '+JSON.stringify(a)+JSON.stringify(b)); carteleraScreen.singleSubscreen.wrapper.html('<li style="text-align:center;">Ocurrio un error. Por favor intenta de nuevo</li>');
+                promosScreen.boton_form.append(app.loader);
+    			promosScreen.boton_form.prop('disabled',true);
+    			myModal.modalHeader.html('Oops');
+    	        myModal.modalBody.html('Ha ocurrido un error creando tu grupo, por favor intenta de nuevo');
+    	        myModal.modal.modal();
+            },
+            success: function(a){
+            	if(a.success=='1'){
+            		
+            	}else{
+            		promosScreen.boton_form.append(app.loader);
+        			promosScreen.boton_form.prop('disabled',true);
+        			myModal.modalHeader.html('Oops');
+        	        myModal.modalBody.html('Ha ocurrido un error creando tu grupo, por favor intenta de nuevo');
+        	        myModal.modal.modal();
+            	}
+            },
+            complete: function(){
+            }	 
+        });
+	},
+	bindEvents: function(){
+		promosScreen.form.parsley().on('form:success',function(){
+			promosScreen.success = true;
+			promosScreen.boton_form.append(app.loader);
+			promosScreen.boton_form.prop('disabled',true);
+        });
+		promosScreen.form.parsley().on('form:error',function(){
+			myModal.modalHeader.html('Oops');
+	        myModal.modalBody.html('Debes llenar todos los campos requeridos');
+	        myModal.modal.modal();
+        });
+		promosScreen.form.parsley().on('form:submit',function(){
+			if(promosScreen.success){
+				promosScreen.success = false;
+            	var formData = promosScreen.form.getFormData();
+            	formData.accion = 'crear_grupo';
+            	formData.user_email = user.correo;
+            	formData.user_pass = user.password;
+            	console.log(formData);
+            	promosScreen.crear_grupo(formData);
+            }
+            return false;
+        });
+	},
 	get: function(){
 		if(promosScreen.get_ajax != null){return true;}
 		promosScreen.wrapper.html(app.loader_block);
@@ -612,13 +673,23 @@ var promosScreen = {
             },
             success: function(a){
             	promosScreen.wrapper.html(a);
-            	
+            	$('.btn-grupos-promos').click(function(){
+            		var tipo = $(this).data('type');
+            		promosScreen.boton_grupo(tipo);
+            	});
             },
             complete: function(){
             	promosScreen.get_ajax = null;
-            }
-
-   	 });
+            }	 
+        });
+	},
+	boton_grupo: function(tipo){
+		if(tipo=='crear'){
+			promosScreen.grupos.show('slide',{direction:'right'},'fast');
+			return true;
+		}else if(tpo=='editar'){
+			
+		}
 	},
 	navigator: function(tipo){
 		if(tipo==1){

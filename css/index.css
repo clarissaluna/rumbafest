@@ -554,7 +554,7 @@ input:checked + .slider:before {
     left: 15px;
     background-position:center;
 }
-.logo_lugares{
+.logo_lugares,.logo_grupos{
 	height:60px;
     width:60px;
     border-radius:30px;
@@ -752,21 +752,21 @@ input:checked + .slider:before {
 	font-size:11px;
 	min-height:30px;
 }
-.lugar{
+.lugar,.grupo{
     height:100px;
     width:100%;
 }
-.div_logo_lugar{
+.div_logo_lugar,.div_logo_grupo{
 	/*
     display:inline-block;
     height:60px;
     width:80px;
     position:relative;*/
 }
-.nombre_lugar{
+.nombre_lugar,.ranking_grupo{
     font-weight:500;
 }
-.detalle_lugar{
+.detalle_lugar,.nombre_grupo{
     font-weight:400;
     font-size:11px;
 }

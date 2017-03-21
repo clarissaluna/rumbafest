@@ -685,20 +685,16 @@
             <subscreen class=" nivel2" id="seguidos_seguidores_subscreen" style="display:none;">
             	<div class="screen-header">
                     
-                    <div class='text-header' style="width:230px;" id="header_seg">Seguidos</div>
+                    <div class='text-header' style="width:230px;" id="header_seg">SEGUIDOS</div>
                     <button class='cerrar' onclick="perfilScreen.seg_pantalla.hide('slide',{direction:'right'},'fast');">X</button>
                    
                 </div>
 
             	<div class="container2" style="overflow-y:scroll;padding-bottom:160px;">
-            		
             			<ul class="list seg-list" id="seg_list">
             			<li>
-	            			
             			</li>
-            			
             			</ul>
-            		
             	</div>
             </screen>
         </screen>
@@ -749,19 +745,26 @@
                     </div>
                 </div>
             </subscreen>
-            <subscreen id="" style="display:none;">
+            <subscreen id="mi_grupo_screen" style="display:none;">
                 <div class="screen-header">
                     
-                    <button class='home'></button>
-                    <div class='text-header' style="width:220px;">PROMOCIONES</div>
-                    <button class='menu'><i class="fa fa-bars" aria-hidden="true"></i></button>
+                    <div class='text-header' style="width:220px;">TU GRUPO</div>
+                    <button class='cerrar' onclick="perfilPromos.grupos.hide('slide',{direction:'right'},'fast');">X</button>
+                   
                 </div>
-                <div class="container2">
-                    <div class="subcontainer">
-                        <div class="wrapper" style="top:-54px;background-image:url(../www/img/Rumbafest/RumbaFest_24.png);background-size:100% 103%;width:101%;height:104%;">
-                        </div>
-                    </div>
-                </div>
+                <div class="container2" style="overflow-y:scroll;padding-bottom:160px;">
+                	<div style="width:90%;margin:0 5%;">
+            			<form id="form_crear_grupo">
+            			<div><input class="input_grupos_promos form-control inputpz " required type="text" placeholder="Escribe el nombre de tu grupo" name="nombre_grupo" disabled></div>
+                    	
+                        <button type="submit" id="crear_grupo" class="btn btn-lg btn-primary btn-block bg-naranja" style="width:45%;margin:20px auto;">CREAR</button>
+                        
+            			</form>
+            		</div>
+            			<ul class="list invite-grupos-list" id="invite_grupos_list">
+            			
+            			</ul>
+            	</div>
             </subscreen>
             <subscreen id="" style="display:none">
                 <div class="screen-header">
